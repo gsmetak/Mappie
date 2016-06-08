@@ -27,6 +27,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private MarkerOptions options = new MarkerOptions();
     private List<LatLng> latlngs = new ArrayList<>();
     private List<Marker> markers = new ArrayList<>();
+    LatLng tmp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +60,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         latlngs.add(new LatLng(37.99, 23.731960));
         latlngs.add(new LatLng(36.90, 23.7339));
 
+        tmp = new LatLng(37.99, 23.731960);
         int i = 1;
         for (LatLng point : latlngs) {
             options.position(point).title("POI" + i).snippet("test");
@@ -79,7 +81,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     markers.get(0).setVisible(false);
                 else {
                     markers.get(0).setVisible(true);
-
                 }
             }
         });
