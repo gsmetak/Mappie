@@ -8,11 +8,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.net.Socket;
+import java.util.ArrayList;
+
 import ds.mappie.R;
+import ds.mappie.models.MapReduce;
 import ds.mappie.services.Request;
-//import ds.mappie.tasks.SendTask;
+import ds.mappie.tasks.SendTask;
 
 public class MainActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,23 +52,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sendData(){
-        String min, max;
-        double minLat, minLong, maxLat, maxLong;
-        String[] mins, maxs;
+//        String min, max;
+//        double minLat, minLong, maxLat, maxLong;
+//        String[] mins, maxs;
+//
+//        min = ((EditText) findViewById(R.id.editText)).getText().toString();
+//        max = ((EditText) findViewById(R.id.editText4)).getText().toString();
+//
+//        mins = min.trim().split(":");
+//        maxs = max.trim().split(":");
+//
+//        minLat = Double.parseDouble(mins[0]);
+//        minLong = Double.parseDouble(mins[1]);
+//        maxLat = Double.parseDouble(maxs[0]);
+//        maxLong = Double.parseDouble(maxs[1]);
 
-        min = ((EditText) findViewById(R.id.editText)).getText().toString();
-        max = ((EditText) findViewById(R.id.editText4)).getText().toString();
-
-        mins = min.trim().split(":");
-        maxs = max.trim().split(":");
-
-        minLat = Double.parseDouble(mins[0]);
-        minLong = Double.parseDouble(mins[1]);
-        maxLat = Double.parseDouble(maxs[0]);
-        maxLong = Double.parseDouble(maxs[1]);
-
-        Request r = new Request(minLat, maxLat, minLong, maxLong, "13:00", "15:00", 5);
-//        new SendTask().execute(r);
+        Request r = new Request(15.0, 15.0, 16.0, 16.0, "13:00", "15:00", 5);
+        new SendTask().execute(r);
 
     }
 

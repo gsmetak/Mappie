@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class Request implements Serializable {
 
 
-    private static final long serialVersionUID = -2723363051271966964L;
+    private static final long serialVersionUID = -2726363051271966964L;
     private double minLat, maxLat, minLong, maxLong;
     private String minTime, maxTime;
     private int topK;

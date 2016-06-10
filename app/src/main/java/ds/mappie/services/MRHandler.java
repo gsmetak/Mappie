@@ -10,20 +10,27 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
 import ds.mappie.R;
 import ds.mappie.activities.MainActivity;
 import ds.mappie.dialogs.YesNoDialog;
+import ds.mappie.models.MapReduce;
+import ds.mappie.models.MapRef;
+import ds.mappie.models.ReduceRef;
 import ds.mappie.tasks.EstablishConnection;
 
 
 public class MRHandler extends AppCompatActivity implements YesNoDialog.DialogListener {
     public static List<MapReduce> addresses = new ArrayList<>();
+    public static List<MapReduce> mapRed = new ArrayList<>();
     public String selected = "";
+    public static int countR = 0, countM = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,11 +41,22 @@ public class MRHandler extends AppCompatActivity implements YesNoDialog.DialogLi
     private void init() {
         setContentView(R.layout.activity_address);
 
+        ((TextView) findViewById(R.id.textView7)).setText(String.valueOf(countM));
+        ((TextView) findViewById(R.id.textView9)).setText(String.valueOf(countR));
+
         Button ok = (Button) findViewById(R.id.button3);
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addAd();
+            }
+        });
+
+        Button reset = (Button) findViewById(R.id.button4);
+        reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clear();
             }
         });
 
@@ -73,19 +91,16 @@ public class MRHandler extends AppCompatActivity implements YesNoDialog.DialogLi
 
         switch (selected) {
             case "Mapper":
-                addresses.add(new MapRef(address, Integer.parseInt(port)));
-                new EstablishConnection(getApplicationContext()).execute(address, port);
+                MapReduce m = new MapRef(address, Integer.parseInt(port));
+                addresses.add(m);
+                new EstablishConnection(getApplicationContext()).execute(m);
                 break;
             case "Reducer":
-                boolean exists = false;
-                for (MapReduce mr : addresses) {
-                    if (mr instanceof ReduceRef) {
-                        exists = true;
-                        break;
-                    }
-                }
-                if (!exists) {
-                    addresses.add(new ReduceRef(address, Integer.parseInt(port)));
+                MapReduce r = new ReduceRef(address, Integer.parseInt(port));
+
+                if (countR == 0) {
+                    addresses.add(r);
+                    new EstablishConnection(getApplicationContext()).execute(r);
                 } else {
                     Toast.makeText(getApplicationContext(), "There is a reducer already.", Toast.LENGTH_LONG).show();
                     init();
@@ -113,15 +128,9 @@ public class MRHandler extends AppCompatActivity implements YesNoDialog.DialogLi
 
     @Override
     public void onDialogNegativeClick(android.support.v4.app.DialogFragment dialog) {
-        boolean exists = false;
-        for (MapReduce mr : addresses) {
-            if (mr instanceof ReduceRef) {
-                exists = true;
-                break;
-            }
-        }
-        if (!exists) {
-            Toast.makeText(getApplicationContext(), "You must add 1 Reducer.", Toast.LENGTH_LONG).show();
+
+        if (countR != 1 || countM < 3) {
+            Toast.makeText(getApplicationContext(), "You must add only 1 Reducer and at least 3 Mappers.", Toast.LENGTH_LONG).show();
             init();
         } else {
             Intent in = new Intent(getApplicationContext(), MainActivity.class);
@@ -129,29 +138,14 @@ public class MRHandler extends AppCompatActivity implements YesNoDialog.DialogLi
         }
     }
 
-
-    private class MapReduce {
-        public String ip;
-        public int port;
-
-        MapReduce(String ip, int port) {
-            this.ip = ip;
-            this.port = port;
-        }
+    private void clear(){
+        addresses.clear();
+        countM = 0;
+        countR = 0;
+        init();
     }
 
-    private class MapRef extends MapReduce {
-        MapRef(String ip, int port) {
-            super(ip, port);
-        }
 
-    }
-
-    private class ReduceRef extends MapReduce {
-        ReduceRef(String ip, int port) {
-            super(ip, port);
-        }
-    }
 
     public Context getC() {
         return getApplicationContext();
