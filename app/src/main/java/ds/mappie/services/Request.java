@@ -2,9 +2,6 @@ package ds.mappie.services;
 
 import java.io.Serializable;
 
-/**
- * Created by Socrates on 31/3/2016.
- */
 public class Request implements Serializable {
 
 
