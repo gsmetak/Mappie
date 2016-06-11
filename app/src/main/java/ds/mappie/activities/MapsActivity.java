@@ -1,6 +1,7 @@
 package ds.mappie.activities;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -13,6 +14,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -20,14 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ds.mappie.R;
+import ds.mappie.services.MappieResources;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private MarkerOptions options = new MarkerOptions();
-    private List<LatLng> latlngs = new ArrayList<>();
-    private List<Marker> markers = new ArrayList<>();
-    LatLng tmp;
+    LatLng tmp = new LatLng(40.719810375488535, -74.00258103213994);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,33 +55,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-
-        latlngs.add(new LatLng(37.99, 23.731960));
-        latlngs.add(new LatLng(36.90, 23.7339));
-
-        tmp = new LatLng(37.99, 23.731960);
-        int i = 1;
-        for (LatLng point : latlngs) {
-            options.position(point).title("POI" + i).snippet("test");
-            markers.add(mMap.addMarker(options));
-            i++;
-        }
-
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(latlngs.get(0)));
-//        mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
-        mMap.setTrafficEnabled(true);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(tmp));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(9), 2000, null);
 
         Button button = (Button) findViewById(R.id.button);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (markers.get(0).isVisible())
-                    markers.get(0).setVisible(false);
-                else {
-                    markers.get(0).setVisible(true);
-                }
+                LatLng topLeft= mMap.getProjection().getVisibleRegion().farLeft;
+                LatLng botRight= mMap.getProjection().getVisibleRegion().nearRight;
+                ((MappieResources)getApplication()).setGeo(topLeft, botRight);
+
+                Intent k = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(k);
             }
         });
 

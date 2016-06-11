@@ -18,29 +18,29 @@
         android:text="Show Map"
         android:id="@+id/button"
         android:clickable="true"
+        android:layout_marginBottom="37dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="89dp" />
+        android:layout_centerHorizontal="true" />
 
-    <EditText
+    <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:inputType="number"
         android:ems="10"
         android:id="@+id/editText"
         android:layout_below="@+id/textView3"
         android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/button"
-        android:editable="true" />
+        android:layout_toStartOf="@+id/editText4"
+        android:editable="true"
+        android:layout_alignParentEnd="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:id="@+id/editText3"
-        android:layout_below="@+id/textView"
-        android:layout_marginTop="29dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true" />
+        android:layout_above="@+id/button"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/editText4" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -49,7 +49,7 @@
         android:text="Minimum"
         android:id="@+id/textView3"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -57,19 +57,19 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Maximum"
         android:id="@+id/textView4"
-        android:layout_alignParentTop="true"
-        android:layout_alignEnd="@+id/editText4" />
+        android:layout_below="@+id/editText"
+        android:layout_centerHorizontal="true" />
 
-    <EditText
+    <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:inputType="number"
         android:ems="10"
         android:id="@+id/editText4"
-        android:layout_alignBottom="@+id/editText"
-        android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/button"
-        android:editable="true" />
+        android:editable="true"
+        android:layout_below="@+id/textView4"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -77,8 +77,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Results"
         android:id="@+id/textView"
-        android:layout_marginTop="95dp"
-        android:layout_below="@+id/editText4"
+        android:layout_above="@+id/editText3"
         android:layout_centerHorizontal="true" />
 
     <Button
@@ -86,8 +85,64 @@
         android:layout_height="wrap_content"
         android:text="Send"
         android:id="@+id/button2"
+        android:layout_above="@+id/textView"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/textView10"
+        android:editable="true"
         android:layout_below="@+id/editText4"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="23dp" />
+        android:layout_marginTop="31dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Min. Time"
+        android:id="@+id/textView11"
+        android:layout_below="@+id/editText4"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Max. Time"
+        android:id="@+id/textView12"
+        android:layout_below="@+id/textView10"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/textView13"
+        android:editable="true"
+        android:layout_below="@+id/textView12"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Top :"
+        android:id="@+id/textView14"
+        android:layout_below="@+id/textView13"
+        android:layout_alignStart="@+id/textView4" />
+
+    <EditText
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/editText6"
+        android:layout_below="@+id/textView13"
+        android:layout_toEndOf="@+id/textView14" />
 
 </RelativeLayout>

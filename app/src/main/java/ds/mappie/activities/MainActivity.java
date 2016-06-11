@@ -1,5 +1,6 @@
 package ds.mappie.activities;
 
+import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -7,25 +8,24 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.net.Socket;
 import java.util.ArrayList;
 
 import ds.mappie.R;
 import ds.mappie.models.MapReduce;
+import ds.mappie.services.MappieResources;
 import ds.mappie.services.Request;
 import ds.mappie.tasks.SendTask;
 
 public class MainActivity extends AppCompatActivity {
-
+    double minLat, minLong, maxLat, maxLong;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-//        setSupportActionBar(toolbar);
 
         Button button = (Button) findViewById(R.id.button);
 
@@ -44,30 +44,25 @@ public class MainActivity extends AppCompatActivity {
                 sendData();
             }
         });
+
+        MappieResources app = (MappieResources) getApplication();
+
+        if (app.hasGeo()) {
+            minLat = app.getMinLat();
+            maxLat = app.getMaxLat();
+            minLong = app.getMinLong();
+            maxLong = app.getMaxLong();
+        }
     }
 
-    public void showMaps(){
+    public void showMaps() {
         Intent k = new Intent(this, MapsActivity.class);
         startActivity(k);
     }
 
-    public void sendData(){
-//        String min, max;
-//        double minLat, minLong, maxLat, maxLong;
-//        String[] mins, maxs;
-//
-//        min = ((EditText) findViewById(R.id.editText)).getText().toString();
-//        max = ((EditText) findViewById(R.id.editText4)).getText().toString();
-//
-//        mins = min.trim().split(":");
-//        maxs = max.trim().split(":");
-//
-//        minLat = Double.parseDouble(mins[0]);
-//        minLong = Double.parseDouble(mins[1]);
-//        maxLat = Double.parseDouble(maxs[0]);
-//        maxLong = Double.parseDouble(maxs[1]);
+    public void sendData() {
 
-        Request r = new Request(15.0, 15.0, 16.0, 16.0, "13:00", "15:00", 5);
+        Request r = new Request(minLat, maxLat, minLong, maxLong, ((EditText)findViewById(R.id.textView10)).getText().toString(), ((EditText)findViewById(R.id.textView13)).getText().toString(), Integer.parseInt(((EditText)findViewById(R.id.editText6)).getText().toString()));
         new SendTask().execute(r);
 
     }

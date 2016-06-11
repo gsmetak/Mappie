@@ -130,7 +130,7 @@ public class MRHandler extends AppCompatActivity implements YesNoDialog.DialogLi
     public void onDialogNegativeClick(android.support.v4.app.DialogFragment dialog) {
 
         if (countR != 1 || countM < 3) {
-            Toast.makeText(getApplicationContext(), "You must add only 1 Reducer and at least 3 Mappers.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Add only 1 Reducer and >=3 Mappers.", Toast.LENGTH_LONG).show();
             init();
         } else {
             Intent in = new Intent(getApplicationContext(), MainActivity.class);
@@ -140,6 +140,7 @@ public class MRHandler extends AppCompatActivity implements YesNoDialog.DialogLi
 
     private void clear(){
         addresses.clear();
+        mapRed.clear();
         countM = 0;
         countR = 0;
         init();
