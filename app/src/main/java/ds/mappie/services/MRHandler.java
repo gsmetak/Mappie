@@ -13,6 +13,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +29,9 @@ import ds.mappie.tasks.EstablishConnection;
 
 
 public class MRHandler extends AppCompatActivity implements YesNoDialog.DialogListener {
-    public static List<MapReduce> addresses = new ArrayList<>();
-    public static List<MapReduce> mapRed = new ArrayList<>();
+    public static List<MapRef> mappers = new ArrayList<>();
+    public static ReduceRef reducer = null;
     public String selected = "";
-    public static int countR = 0, countM = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +42,11 @@ public class MRHandler extends AppCompatActivity implements YesNoDialog.DialogLi
     private void init() {
         setContentView(R.layout.activity_address);
 
-        ((TextView) findViewById(R.id.textView7)).setText(String.valueOf(countM));
-        ((TextView) findViewById(R.id.textView9)).setText(String.valueOf(countR));
+        ((TextView) findViewById(R.id.textView7)).setText(String.valueOf(mappers.size()));
+        if (reducer == null)
+            ((TextView) findViewById(R.id.textView9)).setText(String.valueOf(0));
+        else
+            ((TextView) findViewById(R.id.textView9)).setText(String.valueOf(1));
 
         Button ok = (Button) findViewById(R.id.button3);
         ok.setOnClickListener(new View.OnClickListener() {
@@ -92,14 +96,11 @@ public class MRHandler extends AppCompatActivity implements YesNoDialog.DialogLi
         switch (selected) {
             case "Mapper":
                 MapReduce m = new MapRef(address, Integer.parseInt(port));
-                addresses.add(m);
                 new EstablishConnection(getApplicationContext()).execute(m);
                 break;
             case "Reducer":
                 MapReduce r = new ReduceRef(address, Integer.parseInt(port));
-
-                if (countR == 0) {
-                    addresses.add(r);
+                if (reducer == null) {
                     new EstablishConnection(getApplicationContext()).execute(r);
                 } else {
                     Toast.makeText(getApplicationContext(), "There is a reducer already.", Toast.LENGTH_LONG).show();
@@ -129,23 +130,34 @@ public class MRHandler extends AppCompatActivity implements YesNoDialog.DialogLi
     @Override
     public void onDialogNegativeClick(android.support.v4.app.DialogFragment dialog) {
 
-        if (countR != 1 || countM < 3) {
+        if (reducer == null || mappers.size() < 3) {
             Toast.makeText(getApplicationContext(), "Add only 1 Reducer and >=3 Mappers.", Toast.LENGTH_LONG).show();
             init();
         } else {
+            final MappieResources app = (MappieResources) getApplication();
+
+            new Thread() {
+                @Override
+                public void run() {
+                    for (int i = 0; i < app.getOuts().size(); i++)
+                        try {
+                            app.getOuts().get(i).writeUTF(reducer.toString());
+                            new ObjectOutputStream(MRHandler.reducer.requestSocket.getOutputStream()).writeInt(MRHandler.mappers.size());
+                        } catch (IOException e) {
+                        }
+                }
+            }.start();
+
             Intent in = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(in);
         }
     }
 
-    private void clear(){
-        addresses.clear();
-        mapRed.clear();
-        countM = 0;
-        countR = 0;
+    private void clear() {
+        mappers.clear();
+        reducer = null;
         init();
     }
-
 
 
     public Context getC() {

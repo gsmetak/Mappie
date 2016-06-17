@@ -4,6 +4,9 @@ import android.app.Application;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+
 /**
  * Created by George-PC on 11-Jun-16.
  */
@@ -12,6 +15,7 @@ public class MappieResources extends Application {
     LatLng botRight;
     boolean hasGeo = false;
     double minLat = 0.0, minLong = 0.0, maxLat = 0.0, maxLong = 0.0;
+    public static ArrayList<ObjectOutputStream> outs;
 
     public LatLng getTopLeft() {
         return topLeft;
@@ -47,5 +51,13 @@ public class MappieResources extends Application {
 
     public boolean hasGeo() {
         return hasGeo;
+    }
+
+    public ArrayList<ObjectOutputStream> getOuts() {
+        return outs;
+    }
+
+    public void setOuts(ArrayList<ObjectOutputStream> outs) {
+        this.outs = outs;
     }
 }

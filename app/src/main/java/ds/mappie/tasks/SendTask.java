@@ -8,25 +8,31 @@ import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import ds.mappie.activities.MainActivity;
+import ds.mappie.models.ReduceRef;
 import ds.mappie.services.MRHandler;
+import ds.mappie.services.MappieResources;
 import ds.mappie.services.Request;
 
 
-public class SendTask extends AsyncTask<Request, Void, Boolean> {
+public class SendTask extends AsyncTask<Request[], Void, Boolean> {
 
     @Override
-    protected Boolean doInBackground(Request... arg0) {
-        try {
-            ObjectOutputStream out = new ObjectOutputStream(MRHandler.mapRed.get(0).requestSocket.getOutputStream());
-            out.writeUnshared(arg0[0]);
-        } catch (IOException e) {
-            return false;
-        }
+    protected Boolean doInBackground(Request[]... requests) {
+        ArrayList<ObjectOutputStream> outs = MappieResources.outs;
+
+        for (int i = 0; i < outs.size(); i++)
+            try {
+                outs.get(i).writeUnshared( (requests[0])[i]);
+                outs.get(i).flush();
+            } catch (IOException e) {
+                return false;
+            }
 
         return true;
-
     }
 
     @Override

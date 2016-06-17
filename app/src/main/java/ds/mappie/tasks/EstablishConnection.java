@@ -3,15 +3,18 @@ package ds.mappie.tasks;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
 import android.widget.Toast;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 import ds.mappie.activities.MainActivity;
 import ds.mappie.dialogs.YesNoDialog;
 import ds.mappie.models.MapReduce;
+import ds.mappie.models.MapRef;
 import ds.mappie.models.ReduceRef;
 import ds.mappie.services.MRHandler;
 
@@ -27,21 +30,23 @@ public class EstablishConnection extends AsyncTask<MapReduce, Void, Boolean> {
 
     @Override
     protected Boolean doInBackground(MapReduce... params) {
-        Socket requestSocket;
+        Socket requestSocket = new Socket();
+        InetSocketAddress iNetAddress = new InetSocketAddress(params[0].ip, params[0].port);
         try {
-            requestSocket = new Socket(InetAddress.getByName(params[0].ip), params[0].port);
+            requestSocket.connect(iNetAddress, 5000);
 
         } catch (IOException e) {
+
             return false;
         }
 
         params[0].requestSocket = requestSocket;
-        MRHandler.mapRed.add(params[0]);
+
 
         if (params[0] instanceof ReduceRef)
-            MRHandler.countR++;
+            MRHandler.reducer = ((ReduceRef) params[0]);
         else
-            MRHandler.countM++;
+            MRHandler.mappers.add((MapRef) params[0]);
 
         return true;
     }
@@ -52,4 +57,5 @@ public class EstablishConnection extends AsyncTask<MapReduce, Void, Boolean> {
         else
             Toast.makeText(c, "Connection was unsuccessful, try again.", Toast.LENGTH_LONG).show();
     }
+
 }

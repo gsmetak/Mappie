@@ -38,7 +38,7 @@
         android:layout_below="@+id/textView2"
         android:layout_centerHorizontal="true"
         android:editable="true"
-        android:inputType="text" />
+        android:inputType="numberDecimal" />
 
     <EditText
         android:layout_width="200dp"
@@ -47,7 +47,7 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:editable="true"
-        android:inputType="text" />
+        android:inputType="numberDecimal" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
