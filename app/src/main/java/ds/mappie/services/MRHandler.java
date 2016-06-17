@@ -32,6 +32,7 @@ public class MRHandler extends AppCompatActivity implements YesNoDialog.DialogLi
     public static List<MapRef> mappers = new ArrayList<>();
     public static ReduceRef reducer = null;
     public String selected = "";
+    public MappieResources app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,11 +131,12 @@ public class MRHandler extends AppCompatActivity implements YesNoDialog.DialogLi
     @Override
     public void onDialogNegativeClick(android.support.v4.app.DialogFragment dialog) {
 
-        if (reducer == null || mappers.size() < 3) {
+        if (reducer == null ) {
             Toast.makeText(getApplicationContext(), "Add only 1 Reducer and >=3 Mappers.", Toast.LENGTH_LONG).show();
             init();
         } else {
-            final MappieResources app = (MappieResources) getApplication();
+            app = (MappieResources) getApplication();
+            addOuts();
 
             new Thread() {
                 @Override
@@ -151,6 +153,20 @@ public class MRHandler extends AppCompatActivity implements YesNoDialog.DialogLi
             Intent in = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(in);
         }
+    }
+
+    public void addOuts() {
+        ArrayList<ObjectOutputStream> outs = new ArrayList<ObjectOutputStream>();
+
+        for (int i = 0; i < MRHandler.mappers.size(); i++) {
+            try {
+                outs.add(new ObjectOutputStream(MRHandler.mappers.get(i).requestSocket.getOutputStream()));
+            } catch (IOException e) {
+            }
+        }
+
+        app.setOuts(outs);
+
     }
 
     private void clear() {

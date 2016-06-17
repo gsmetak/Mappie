@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         app = (MappieResources) getApplication();
-        addOuts();
 
         Button button = (Button) findViewById(R.id.button);
 
@@ -63,8 +62,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sendData() {
-        String midDate = ((EditText) findViewById(R.id.textView10)).getText().toString();
-        String maxDate = ((EditText) findViewById(R.id.textView13)).getText().toString();
+//        String midDate = ((EditText) findViewById(R.id.textView10)).getText().toString();
+//        String maxDate = ((EditText) findViewById(R.id.textView13)).getText().toString();
         int topK = Integer.parseInt(((EditText) findViewById(R.id.editText6)).getText().toString());
         int size = MRHandler.mappers.size();
         double longLength = app.getMaxLong() - app.getMinLong();
@@ -72,24 +71,12 @@ public class MainActivity extends AppCompatActivity {
         Request[] requests = new Request[size];
 
         for (int i = 0; i < size; i++) {
-            requests[i] = new Request(app.getMinLat(), app.getMaxLat(), app.getMinLong() + i * newLength, app.getMinLong() + (i + 1) * newLength, midDate, maxDate, topK);
+//            requests[i] = new Request(app.getMinLat(), app.getMaxLat(), app.getMinLong() + i * newLength, app.getMinLong() + (i + 1) * newLength, midDate, maxDate, topK);
         }
 
         new SendTask().execute(requests);
 
     }
 
-    public void addOuts() {
-        ArrayList<ObjectOutputStream> outs = new ArrayList<ObjectOutputStream>();
 
-        for (int i = 0; i < MRHandler.mappers.size(); i++) {
-            try {
-                outs.add(new ObjectOutputStream(MRHandler.mappers.get(i).requestSocket.getOutputStream()));
-            } catch (IOException e) {
-            }
-        }
-
-        app.setOuts(outs);
-
-    }
 }
