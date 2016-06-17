@@ -143,9 +143,14 @@ public class MRHandler extends AppCompatActivity implements YesNoDialog.DialogLi
                 public void run() {
                     for (int i = 0; i < app.getOuts().size(); i++)
                         try {
-                            app.getOuts().get(i).writeUTF(reducer.toString());
-                            new ObjectOutputStream(MRHandler.reducer.requestSocket.getOutputStream()).writeInt(MRHandler.mappers.size());
+                            app.getOuts().get(i).writeObject(reducer.toString());
+                            app.getOuts().get(i).flush();
+                            ObjectOutputStream redout = new ObjectOutputStream(MRHandler.reducer.requestSocket.getOutputStream());
+                            redout.writeInt(MRHandler.mappers.size());
+                            redout.flush();
+
                         } catch (IOException e) {
+                            e.printStackTrace();
                         }
                 }
             }.start();
@@ -162,6 +167,7 @@ public class MRHandler extends AppCompatActivity implements YesNoDialog.DialogLi
             try {
                 outs.add(new ObjectOutputStream(MRHandler.mappers.get(i).requestSocket.getOutputStream()));
             } catch (IOException e) {
+                e.printStackTrace();
             }
         }
 

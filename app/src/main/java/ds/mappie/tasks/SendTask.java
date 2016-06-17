@@ -22,12 +22,11 @@ public class SendTask extends AsyncTask<Request[], Void, Boolean> {
 
     @Override
     protected Boolean doInBackground(Request[]... requests) {
-        ArrayList<ObjectOutputStream> outs = MappieResources.outs;
 
-        for (int i = 0; i < outs.size(); i++)
+        for (int i = 0; i < MappieResources.outs.size(); i++)
             try {
-                outs.get(i).writeUnshared( (requests[0])[i]);
-                outs.get(i).flush();
+                MappieResources.outs.get(i).writeUnshared( (requests[0])[i]);
+                MappieResources.outs.get(i).flush();
             } catch (IOException e) {
                 return false;
             }

@@ -36,7 +36,6 @@ public class EstablishConnection extends AsyncTask<MapReduce, Void, Boolean> {
             requestSocket.connect(iNetAddress, 5000);
 
         } catch (IOException e) {
-
             return false;
         }
 
