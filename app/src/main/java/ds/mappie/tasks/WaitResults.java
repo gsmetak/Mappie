@@ -46,7 +46,7 @@ public class WaitResults implements Runnable {
 
                 wait.wait();
 
-                MappieResources.setCheckIns((HashMap<CheckIn, Integer>)in.readObject());
+                MappieResources.checkIns = ((HashMap<CheckIn, Integer>)in.readObject());
 
             } catch (IOException e) {
                 e.printStackTrace();

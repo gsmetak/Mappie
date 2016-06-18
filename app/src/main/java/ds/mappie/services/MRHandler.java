@@ -132,7 +132,7 @@ public class MRHandler extends AppCompatActivity implements YesNoDialog.DialogLi
     public void onDialogNegativeClick(android.support.v4.app.DialogFragment dialog) {
 
         if (reducer == null) {
-            Toast.makeText(getApplicationContext(), "SOK ISE VLJ", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Add only 1 Reducer and >=3 Mappers.", Toast.LENGTH_LONG).show();
             init();
         } else {
             app = (MappieResources) getApplication();
