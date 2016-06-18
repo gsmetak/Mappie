@@ -1,4 +1,4 @@
-package ds.mappie.services;
+package ds.mappie.models;
 
 import java.io.Serializable;
 

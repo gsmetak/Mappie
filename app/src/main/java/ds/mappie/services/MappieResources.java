@@ -6,6 +6,9 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Map;
+
+import ds.mappie.models.CheckIn;
 
 /**
  * Created by George-PC on 11-Jun-16.
@@ -16,6 +19,7 @@ public class MappieResources extends Application {
     boolean hasGeo = false;
     double minLat = 0.0, minLong = 0.0, maxLat = 0.0, maxLong = 0.0;
     public static ArrayList<ObjectOutputStream> outs;
+    public static Map<CheckIn, Integer> checkIns;
 
     public LatLng getTopLeft() {
         return topLeft;
@@ -60,4 +64,5 @@ public class MappieResources extends Application {
     public void setOuts(ArrayList<ObjectOutputStream> outs) {
         this.outs = outs;
     }
+
 }

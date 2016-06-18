@@ -131,8 +131,8 @@ public class MRHandler extends AppCompatActivity implements YesNoDialog.DialogLi
     @Override
     public void onDialogNegativeClick(android.support.v4.app.DialogFragment dialog) {
 
-        if (reducer == null ) {
-            Toast.makeText(getApplicationContext(), "Add only 1 Reducer and >=3 Mappers.", Toast.LENGTH_LONG).show();
+        if (reducer == null) {
+            Toast.makeText(getApplicationContext(), "SOK ISE VLJ", Toast.LENGTH_LONG).show();
             init();
         } else {
             app = (MappieResources) getApplication();
@@ -141,17 +141,23 @@ public class MRHandler extends AppCompatActivity implements YesNoDialog.DialogLi
             new Thread() {
                 @Override
                 public void run() {
-                    for (int i = 0; i < app.getOuts().size(); i++)
+                    for (int i = 0; i < app.getOuts().size(); i++) {
                         try {
                             app.getOuts().get(i).writeObject(reducer.toString());
                             app.getOuts().get(i).flush();
-                            ObjectOutputStream redout = new ObjectOutputStream(MRHandler.reducer.requestSocket.getOutputStream());
-                            redout.writeInt(MRHandler.mappers.size());
-                            redout.flush();
-
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+                    }
+
+                    try {
+                        app.getOuts().get(app.getOuts().size()-1).writeInt(MRHandler.mappers.size());
+                        app.getOuts().get(app.getOuts().size()-1).flush();
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                 }
             }.start();
 
@@ -169,6 +175,12 @@ public class MRHandler extends AppCompatActivity implements YesNoDialog.DialogLi
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+
+        try {
+            outs.add(new ObjectOutputStream(reducer.requestSocket.getOutputStream()));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         app.setOuts(outs);
