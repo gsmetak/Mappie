@@ -9,6 +9,7 @@
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -32,7 +33,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".services.MRHandler"
+            android:name=".activities.MRHandler"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -46,8 +47,8 @@
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/title_activity_main" />
-        <activity android:name=".activities.ResultsActivity"></activity>
+        <activity android:name=".activities.ResultsActivity" />
+        <activity android:name=".activities.PhotoView"></activity>
     </application>
-
 
 </manifest>

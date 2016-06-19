@@ -10,7 +10,6 @@ import android.widget.EditText;
 
 import ds.mappie.dialogs.DatePicker;
 import ds.mappie.R;
-import ds.mappie.services.MRHandler;
 import ds.mappie.services.MappieResources;
 import ds.mappie.models.Request;
 import ds.mappie.tasks.SendTask;
@@ -85,6 +84,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         new SendTask().execute(requests);
+
+        Intent i = new Intent(this, ResultsActivity.class);
+        startActivity(i);
 
     }
 

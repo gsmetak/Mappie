@@ -1,9 +1,11 @@
-package ds.mappie.services;
+package ds.mappie.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.Formatter;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -14,17 +16,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import ds.mappie.R;
-import ds.mappie.activities.MainActivity;
 import ds.mappie.dialogs.YesNoDialog;
 import ds.mappie.models.MapReduce;
 import ds.mappie.models.MapRef;
 import ds.mappie.models.ReduceRef;
+import ds.mappie.services.MappieResources;
 import ds.mappie.tasks.EstablishConnection;
 
 
@@ -33,11 +40,13 @@ public class MRHandler extends AppCompatActivity implements YesNoDialog.DialogLi
     public static ReduceRef reducer = null;
     public String selected = "";
     public MappieResources app;
+    public static ServerSocket serverSocket;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init();
+
     }
 
     private void init() {
@@ -131,7 +140,7 @@ public class MRHandler extends AppCompatActivity implements YesNoDialog.DialogLi
     @Override
     public void onDialogNegativeClick(android.support.v4.app.DialogFragment dialog) {
 
-        if (reducer == null) {
+        if (reducer == null || mappers.size() < 3) {
             Toast.makeText(getApplicationContext(), "Add only 1 Reducer and >=3 Mappers.", Toast.LENGTH_LONG).show();
             init();
         } else {
@@ -141,7 +150,7 @@ public class MRHandler extends AppCompatActivity implements YesNoDialog.DialogLi
             new Thread() {
                 @Override
                 public void run() {
-                    for (int i = 0; i < app.getOuts().size(); i++) {
+                    for (int i = 0; i < app.getOuts().size() - 1; i++) {
                         try {
                             app.getOuts().get(i).writeObject(reducer.toString());
                             app.getOuts().get(i).flush();
@@ -151,7 +160,15 @@ public class MRHandler extends AppCompatActivity implements YesNoDialog.DialogLi
                     }
 
                     try {
-                        app.getOuts().get(app.getOuts().size()-1).writeInt(MRHandler.mappers.size());
+                        app.getOuts().get(app.getOuts().size()-1).writeObject(MRHandler.mappers.size());
+                        app.getOuts().get(app.getOuts().size()-1).flush();
+
+                        MappieResources.serverSocket = new ServerSocket(0);
+
+                        String ip = Formatter.formatIpAddress(((WifiManager) getSystemService(WIFI_SERVICE)).getConnectionInfo().getIpAddress());
+                        app.getOuts().get(app.getOuts().size()-1).writeUTF(ip + "\0");
+                        app.getOuts().get(app.getOuts().size()-1).flush();
+                        app.getOuts().get(app.getOuts().size()-1).writeInt(((InetSocketAddress)MappieResources.serverSocket.getLocalSocketAddress()).getPort());
                         app.getOuts().get(app.getOuts().size()-1).flush();
 
                     } catch (IOException e) {

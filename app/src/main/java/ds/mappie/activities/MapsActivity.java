@@ -19,17 +19,19 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import ds.mappie.R;
-import ds.mappie.models.CheckIn;
+import ds.mappie.models.POI;
 import ds.mappie.services.MappieResources;
+import ds.mappie.tasks.GetPhoto;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private List<Marker> markers = new ArrayList<>();
-    private List<LatLng> locations = new ArrayList<>();
+    private HashMap<Marker, ArrayList<String>> markers = new HashMap<>();
+    private MarkerOptions options = new MarkerOptions();
     LatLng tmp = new LatLng(40.719810375488535, -74.00258103213994);
 
     @Override
@@ -41,7 +43,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
 
         mapFragment.getMapAsync(this);
-
 
 
     }
@@ -59,9 +60,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LatLng topLeft= mMap.getProjection().getVisibleRegion().farLeft;
-                LatLng botRight= mMap.getProjection().getVisibleRegion().nearRight;
-                ((MappieResources)getApplication()).setGeo(topLeft, botRight);
+                LatLng topLeft = mMap.getProjection().getVisibleRegion().farLeft;
+                LatLng botRight = mMap.getProjection().getVisibleRegion().nearRight;
+                ((MappieResources) getApplication()).setGeo(topLeft, botRight);
 
                 Intent k = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(k);
@@ -69,20 +70,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
         Intent i = getIntent();
-        if(i.hasExtra("results")){
+        if (i.hasExtra("results")) {
             button.setEnabled(false);
 
-            for(CheckIn ch : ((MappieResources)getApplication()).checkIns.keySet()){
-                locations.add(new LatLng(ch.getLatitude(), ch.getLongitude()));
+
+            for (POI p : ((MappieResources) getApplication()).checkIns.values()) {
+                options.position(new LatLng(p.getLatitude(), p.getLongitude())).title(p.getPOI_name()).snippet(p.getNoOfCheckins() + " check ins have been made here.");
+                markers.put(mMap.addMarker(options), p.getPhotos());
             }
 
+            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker) {
 
-//            for (LatLng point : latlngs) {
-//                options.position(point).title("POI" + i).snippet("test");
-//                markers.add(mMap.addMarker(options));
-//                i++;
-//            }
+                    Intent i = new Intent(getApplicationContext(), PhotoView.class);
+                    i.putStringArrayListExtra("photos", markers.get(marker));
+                    i.putExtra("name", marker.getTitle());
+                    i.putExtra("check", marker.getSnippet());
 
+                    startActivity(i);
+
+                    return true;
+                }
+            });
 
         }
 

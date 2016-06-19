@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="ds.mappie.services.MRHandler"
+    tools:context=".activities.MRHandler"
     android:clickable="true">
 
     <TextView

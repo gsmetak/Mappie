@@ -2,21 +2,16 @@ package ds.mappie.tasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.Looper;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-import ds.mappie.activities.MainActivity;
-import ds.mappie.dialogs.YesNoDialog;
 import ds.mappie.models.MapReduce;
 import ds.mappie.models.MapRef;
 import ds.mappie.models.ReduceRef;
-import ds.mappie.services.MRHandler;
+import ds.mappie.activities.MRHandler;
 
 /**
  * Created by George-PC on 10-Jun-16.

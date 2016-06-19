@@ -13,7 +13,7 @@ public class SendTask extends AsyncTask<Request[], Void, Boolean> {
     @Override
     protected Boolean doInBackground(Request[]... requests) {
 
-        for (int i = 0; i < MappieResources.outs.size(); i++)
+        for (int i = 0; i < MappieResources.outs.size()-1; i++)
             try {
                 MappieResources.outs.get(i).writeUnshared( (requests[0])[i]);
                 MappieResources.outs.get(i).flush();
