@@ -28,7 +28,7 @@ public class EstablishConnection extends AsyncTask<MapReduce, Void, Boolean> {
         Socket requestSocket = new Socket();
         InetSocketAddress iNetAddress = new InetSocketAddress(params[0].ip, params[0].port);
         try {
-            requestSocket.connect(iNetAddress, 5000);
+            requestSocket.connect(iNetAddress, 15000);
 
         } catch (IOException e) {
             return false;
